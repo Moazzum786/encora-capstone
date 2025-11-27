@@ -1,15 +1,14 @@
 import { Outlet } from "react-router";
 import Navbar from "../components/navbar";
 import { Toaster } from "sonner";
-
-function LayoutWithNavbar() {
+export default function LayoutWithNavbar() {
     return (
-        <div className="layout-with-navbar min-h-screen flex flex-col">
+        <div className="min-h-screen flex flex-col">
             <Navbar />
-            <Outlet />
-            <Toaster />
+            <div className="flex-1">
+                <Outlet />
+            </div>
+            <Toaster/>
         </div>
     );
 }
-
-export default LayoutWithNavbar;
