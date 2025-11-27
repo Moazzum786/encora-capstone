@@ -9,6 +9,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.security.SignatureException;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -25,30 +27,26 @@ public class AuthGrpcService extends AuthServiceImplBase {
     private final JwtUtilsService jwtUtilsService;
     private final UserRepository userRepository;
     private final Logger logger = LoggerFactory.getLogger(
-        AuthGrpcService.class
-    );
+            AuthGrpcService.class);
 
     public AuthGrpcService(
-        JwtUtilsService jwtUtilsService,
-        UserRepository userRepository
-    ) {
+            JwtUtilsService jwtUtilsService,
+            UserRepository userRepository) {
         this.jwtUtilsService = jwtUtilsService;
         this.userRepository = userRepository;
     }
 
     @Override
     public void validateToken(
-        ValidationRequest request,
-        StreamObserver<ValidationResponse> responseObserver
-    ) {
+            ValidationRequest request,
+            StreamObserver<ValidationResponse> responseObserver) {
         String accessToken = request.getAccessToken();
         logger.info("Received access token: {}", accessToken);
 
         // Handle null or empty token
         if (accessToken == null || accessToken.trim().isEmpty()) {
             logger.warn("Received null or empty access token");
-            ValidationResponse validationResponse =
-                ValidationResponse.newBuilder()
+            ValidationResponse validationResponse = ValidationResponse.newBuilder()
                     .setIsValid(false)
                     .setIsRefreshed(false)
                     .build();
@@ -62,16 +60,14 @@ public class AuthGrpcService extends AuthServiceImplBase {
             jwtUtilsService.validateToken(accessToken);
 
             // Token is valid, send success response
-            ValidationResponse validationResponse =
-                ValidationResponse.newBuilder()
+            ValidationResponse validationResponse = ValidationResponse.newBuilder()
                     .setIsValid(true)
                     .setIsRefreshed(false)
                     .build();
             sendValidateTokenResponse(responseObserver, validationResponse);
         } catch (SignatureException ex) {
             logger.warn("Invalid token signature");
-            ValidationResponse validationResponse =
-                ValidationResponse.newBuilder()
+            ValidationResponse validationResponse = ValidationResponse.newBuilder()
                     .setIsValid(false)
                     .setIsRefreshed(false)
                     .build();
@@ -81,8 +77,7 @@ public class AuthGrpcService extends AuthServiceImplBase {
             handleExpiredToken(ex, responseObserver);
         } catch (JwtException ex) {
             logger.error("JWT validation error: {}", ex.getMessage());
-            ValidationResponse validationResponse =
-                ValidationResponse.newBuilder()
+            ValidationResponse validationResponse = ValidationResponse.newBuilder()
                     .setIsValid(false)
                     .setIsRefreshed(false)
                     .build();
@@ -94,9 +89,8 @@ public class AuthGrpcService extends AuthServiceImplBase {
     }
 
     private void handleExpiredToken(
-        ExpiredJwtException ex,
-        StreamObserver<ValidationResponse> responseObserver
-    ) {
+            ExpiredJwtException ex,
+            StreamObserver<ValidationResponse> responseObserver) {
         try {
             Claims claims = ex.getClaims();
 
@@ -104,8 +98,7 @@ public class AuthGrpcService extends AuthServiceImplBase {
 
             if (email == null || email.isEmpty()) {
                 logger.warn("Email claim missing from expired token");
-                ValidationResponse validationResponse =
-                    ValidationResponse.newBuilder()
+                ValidationResponse validationResponse = ValidationResponse.newBuilder()
                         .setIsValid(false)
                         .setIsRefreshed(false)
                         .build();
@@ -117,8 +110,7 @@ public class AuthGrpcService extends AuthServiceImplBase {
 
             if (userOptional.isEmpty()) {
                 logger.warn("User not found for email: {}", email);
-                ValidationResponse validationResponse =
-                    ValidationResponse.newBuilder()
+                ValidationResponse validationResponse = ValidationResponse.newBuilder()
                         .setIsValid(false)
                         .setIsRefreshed(false)
                         .build();
@@ -129,12 +121,9 @@ public class AuthGrpcService extends AuthServiceImplBase {
             User user = userOptional.get();
             Token refreshToken = user.getRefreshToken();
 
-            if (
-                refreshToken == null || refreshToken.getRefreshToken() == null
-            ) {
+            if (refreshToken == null || refreshToken.getRefreshToken() == null) {
                 logger.warn("No refresh token found for user: {}", email);
-                ValidationResponse validationResponse =
-                    ValidationResponse.newBuilder()
+                ValidationResponse validationResponse = ValidationResponse.newBuilder()
                         .setIsValid(false)
                         .setIsRefreshed(false)
                         .build();
@@ -148,11 +137,9 @@ public class AuthGrpcService extends AuthServiceImplBase {
                 jwtUtilsService.validateToken(refreshTokenString);
             } catch (JwtException exception) {
                 logger.warn(
-                    "Refresh token validation failed for user: {}",
-                    email
-                );
-                ValidationResponse validationResponse =
-                    ValidationResponse.newBuilder()
+                        "Refresh token validation failed for user: {}",
+                        email);
+                ValidationResponse validationResponse = ValidationResponse.newBuilder()
                         .setIsValid(false)
                         .setIsRefreshed(false)
                         .build();
@@ -160,33 +147,29 @@ public class AuthGrpcService extends AuthServiceImplBase {
                 return;
             }
 
-            List<String> roles = List.of("USER");
+            List<String> roles = new ArrayList<>(List.of("USER"));
             if (user.getIsAdmin()) {
                 roles.add("ADMIN");
             }
 
             Map<String, Object> newAccessTokenClaims = Map.of(
-                "email",
-                user.getEmail(),
-                "userId",
-                user.getUserId().toString(),
-                "userName",
-                user.getUserName(),
-                "roles",
-                roles
-            );
+                    "email",
+                    user.getEmail(),
+                    "userId",
+                    user.getUserId().toString(),
+                    "userName",
+                    user.getUserName(),
+                    "roles",
+                    roles);
 
             String refreshedAccessToken = jwtUtilsService.generateToken(
-                newAccessTokenClaims,
-                TokenExpiryType.ACCESS_TOKEN
-            );
+                    newAccessTokenClaims,
+                    TokenExpiryType.ACCESS_TOKEN);
 
             logger.info(
-                "Successfully refreshed access token for user: {}",
-                email
-            );
-            ValidationResponse validationResponse =
-                ValidationResponse.newBuilder()
+                    "Successfully refreshed access token for user: {}",
+                    email);
+            ValidationResponse validationResponse = ValidationResponse.newBuilder()
                     .setIsValid(true)
                     .setIsRefreshed(true)
                     .setRefreshedAccessToken(refreshedAccessToken)
@@ -200,9 +183,8 @@ public class AuthGrpcService extends AuthServiceImplBase {
     }
 
     private void sendValidateTokenResponse(
-        StreamObserver<ValidationResponse> responseObserver,
-        ValidationResponse validationResponse
-    ) {
+            StreamObserver<ValidationResponse> responseObserver,
+            ValidationResponse validationResponse) {
         responseObserver.onNext(validationResponse);
         responseObserver.onCompleted();
     }

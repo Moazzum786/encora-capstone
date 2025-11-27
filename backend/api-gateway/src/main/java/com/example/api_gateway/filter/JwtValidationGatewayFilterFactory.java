@@ -112,9 +112,9 @@ public class JwtValidationGatewayFilterFactory
                             ServerHttpRequest request = exchange
                                 .getRequest()
                                 .mutate()
-                                .header("X-User-Id", userId)
-                                .header("X-User-Email", email)
-                                .header("X-User-Roles", roles)
+                                .header("x-user-id", userId)
+                                .header("x-user-email", email)
+                                .header("x-user-roles", roles)
                                 .build();
 
                             // 4. Update the Exchange
