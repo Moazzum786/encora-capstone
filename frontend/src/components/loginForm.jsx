@@ -5,9 +5,25 @@ import { loginUser } from "../query/loginQuery";
 import { passwordValidator } from "../utils/validators";
 import { useNavigate } from "react-router";
 import InputFieldSetWithValidation from "./inputFieldSetWithValidation";
+import { useUser } from "../provider/userProvider";
+import { jwtDecode } from "jwt-decode";
 
 function LoginForm() {
-    const navigate = useNavigate();
+    const { setUser } = useUser();
+
+    const mutation = useMutation({
+        mutationFn: loginUser,
+        onSuccess: (data) => {
+            const accessToken = data.accessToken;
+            setUser(jwtDecode(accessToken));
+            localStorage.setItem("accessToken", data.accessToken);
+            toast.success("Login successful!");
+        },
+        onError: (error) => {
+            toast.error(error.response.data.message);
+        },
+    });
+
     const handleSubmit = (event) => {
         event.preventDefault();
         const formData = new FormData(event.target);
@@ -17,18 +33,6 @@ function LoginForm() {
         };
         mutation.mutate(data);
     };
-
-    const mutation = useMutation({
-        mutationFn: loginUser,
-        onSuccess: (data) => {
-            localStorage.setItem("accessToken", data.accessToken);
-            toast.success("Login successful!");
-            navigate("/products");
-        },
-        onError: (error) => {
-            toast.error(error.response.data.message);
-        },
-    });
 
     return (
         <div className="registration-form-container col-span-1 col-start-2 place-self-center w-[50%] p-6 rounded-lg">

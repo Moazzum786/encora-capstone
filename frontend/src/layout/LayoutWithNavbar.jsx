@@ -8,7 +8,7 @@ export default function LayoutWithNavbar() {
             <div className="flex-1">
                 <Outlet />
             </div>
-            <Toaster/>
+            <Toaster />
         </div>
     );
 }

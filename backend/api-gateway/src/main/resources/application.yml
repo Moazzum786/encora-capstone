@@ -27,8 +27,17 @@ spring:
                           filters:
                               - StripPrefix=3
 
-                        # Product Routes
-                        - id: product-service
+                        # Public Product Routes (GET only) - NO JwtValidation
+                        - id: product-service-public
+                          uri: http://localhost:8085
+                          predicates:
+                              - Path=/api/v1/product/**
+                              - Method=GET
+                          filters:
+                              - StripPrefix=3
+
+                        # Secured Product Routes (POST, PUT, DELETE, etc.) - HAS JwtValidation
+                        - id: product-service-secured
                           uri: http://localhost:8085
                           predicates:
                               - Path=/api/v1/product/**

@@ -19,22 +19,26 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, GatewayHeaderFilter gatewayHeaderFilter)
-            throws Exception {
+    public SecurityFilterChain filterChain(
+        HttpSecurity http,
+        GatewayHeaderFilter gatewayHeaderFilter
+    ) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable)
-
-                // 1. Allow H2 Console using Frames
-                .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
-
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(gatewayHeaderFilter, UsernamePasswordAuthenticationFilter.class)
-                .authorizeHttpRequests(auth -> auth
-                        // 2. Permit access to H2 Console explicitly
-                        .requestMatchers(PathRequest.toH2Console()).permitAll()
-                        // Or manually: .requestMatchers("/h2-console/**").permitAll()
-
-                        .anyRequest().authenticated());
+            .csrf(AbstractHttpConfigurer::disable)
+            // 1. Allow H2 Console using Frames
+            .headers(headers ->
+                headers.frameOptions(
+                    HeadersConfigurer.FrameOptionsConfig::sameOrigin
+                )
+            )
+            .sessionManagement(session ->
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            )
+            .addFilterBefore(
+                gatewayHeaderFilter,
+                UsernamePasswordAuthenticationFilter.class
+            )
+            .authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
 
         return http.build();
     }

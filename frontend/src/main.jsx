@@ -11,6 +11,7 @@ import { UserProvider } from "./provider/userProvider.jsx";
 import ProfilePageLayout from "./layout/ProfileLayout.jsx";
 const queryClient = new QueryClient();
 import ProductsPage from "./pages/ProductsPage.jsx";
+import { ProductFilterProvider } from "./provider/ProductFilterProvider.jsx";
 
 createRoot(document.getElementById("root")).render(
     <StrictMode>
@@ -26,7 +27,11 @@ createRoot(document.getElementById("root")).render(
                             ></Route>
                             <Route
                                 path="/products"
-                                element={<ProductsPage />}
+                                element={
+                                    <ProductFilterProvider>
+                                        <ProductsPage />
+                                    </ProductFilterProvider>
+                                }
                             />
                             <Route
                                 path="/auth/login"
