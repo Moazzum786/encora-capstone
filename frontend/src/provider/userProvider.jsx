@@ -1,4 +1,5 @@
 import { jwtDecode } from "jwt-decode";
+import Cookies from "js-cookie";
 import React, { use, useState, createContext } from "react";
 
 /**
@@ -22,15 +23,15 @@ const userContext = createContext(null);
 function UserProvider({ children }) {
   const [user, setUser] = useState(() => {
     try {
-      const accessToken = localStorage.getItem("accessToken");
+      const accessToken = Cookies.get("accessToken");
+
       if (accessToken) {
         const decodedUser = jwtDecode(accessToken);
-        console.log(decodedUser);
         return decodedUser;
       }
     } catch (error) {
       console.error("Error decoding token:", error);
-      localStorage.removeItem("accessToken");
+      Cookies.remove("accessToken");
     }
     return null;
   });

@@ -60,7 +60,7 @@ public class AuthController {
                 String accessToken = authService.generateAccessTokenOnLogin(
                                 loginRequestDto);
                 ResponseCookie cookie = ResponseCookie.from("accessToken", accessToken)
-                                .httpOnly(true)
+                                .httpOnly(false)
                                 .secure(false)
                                 .path("/")
                                 .sameSite("Lax")
