@@ -32,11 +32,13 @@ public class ApiExceptionHandler {
 
     static class ErrorBody {
         private String message;
+
         public ErrorBody(String message) {
-        	this.message = message;
-        	}
+            this.message = message;
+        }
+
         public String getMessage() {
-        	return message;
-        	}
+            return message;
+        }
     }
 }

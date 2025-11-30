@@ -1,24 +1,42 @@
 package com.techademy.shoppingcart.dto;
 
+import com.techademy.shoppingcart.enums.Size;
+
 public class CartItemDto {
     private String productId;
     private Integer quantity;
+    private Size size;
 
-    public CartItemDto() {}
-    public CartItemDto(String productId, Integer quantity) {
+    public CartItemDto() {
+    }
+
+    public CartItemDto(String productId, Integer quantity, Size size) {
         this.productId = productId;
         this.quantity = quantity;
+        this.size = size;
     }
+
     public String getProductId() {
-    	return productId;
-    	}
+        return productId;
+    }
+
     public void setProductId(String productId) {
-    	this.productId = productId;
-    	}
+        this.productId = productId;
+    }
+
     public Integer getQuantity() {
-    	return quantity; 
-    	}
-    public void setQuantity(Integer quantity) { 
-    	this.quantity = quantity;
-    	}
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public Size getSize() {
+        return size;
+    }
+
+    public void setSize(Size size) {
+        this.size = size;
+    }
 }

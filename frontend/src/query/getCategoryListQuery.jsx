@@ -13,7 +13,7 @@ import axios from "axios";
  */
 
 export const fetchCategoryList = async () => {
-    const response = await axios.get(`${API_PRODUCT_BASE_URL}/category`);
+  const response = await axios.get(`${API_PRODUCT_BASE_URL}/category`);
 
-    return response.data;
+  return response.data;
 };

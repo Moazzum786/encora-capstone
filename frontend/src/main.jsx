@@ -10,7 +10,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { UserProvider } from "./provider/userProvider.jsx";
 import ProfilePageLayout from "./layout/ProfileLayout.jsx";
 const queryClient = new QueryClient();
-import ProductsPage from "./pages/ProductsPage.jsx";
+import ProductsPage from "./pages/product/ProductsPage.jsx";
 import { ProductFilterProvider } from "./provider/ProductFilterProvider.jsx";
 import AccountPage from "./pages/profile/accountPage.jsx";
 import OrderHistory from "./pages/profile/orderHistory.jsx";
@@ -23,6 +23,8 @@ import ProductUpdatePage from "./pages/admin/updateProductPage.jsx";
 import CreateCategoryPage from "./pages/admin/createCategoryPage.jsx";
 import AdminProductSearch from "./pages/admin/adminProductSearch.jsx";
 import DeleteProductSearch from "./pages/admin/deleteProductSearch.jsx";
+import ProductDetailsPage from "./pages/product/productDetailsPage.jsx";
+import ShoppingCartPage from "./pages/shopping-cart/ShoppingCartPage.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -32,6 +34,7 @@ createRoot(document.getElementById("root")).render(
           <Routes>
             <Route path="/" element={<LayoutWithNavbar />}>
               <Route path="/" element={<App />}></Route>
+              <Route path="/cart" element={<ShoppingCartPage />}></Route>
               <Route
                 path="/admin"
                 element={
@@ -84,6 +87,10 @@ createRoot(document.getElementById("root")).render(
                     <ProductsPage />
                   </ProductFilterProvider>
                 }
+              />
+              <Route
+                path="/products/:productId"
+                element={<ProductDetailsPage />}
               />
               <Route path="/auth/login" element={<LoginPage />}></Route>
               <Route path="/auth/register" element={<RegisterPage />}></Route>

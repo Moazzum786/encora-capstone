@@ -1,5 +1,6 @@
 import { Link } from "react-router";
 import { useUser } from "../provider/userProvider";
+import { ShoppingBagIcon } from "lucide-react";
 import AvaterPlaceholder from "./avatarPlaceholder";
 
 function Navbar() {
@@ -17,6 +18,11 @@ function Navbar() {
         </div>
 
         <div className="navbar-end flex gap-4">
+          {user != null && (
+            <Link to={"/cart"}>
+              <ShoppingBagIcon className="w-6 h-6" />
+            </Link>
+          )}
           <Link to={"/products"}>
             <button className="btn btn-accent">Products</button>
           </Link>

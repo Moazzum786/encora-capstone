@@ -62,7 +62,7 @@ export default function ProductCard({ product }) {
         </div>
 
         <div className="card-actions justify-end mt-4">
-          <Link to={"/product/" + product.id}>
+          <Link to={"/products/" + product.id}>
             <button
               className="btn btn-neutral btn-sm rounded-full w-full hover:btn-primary transition-colors disabled:bg-base-300 disabled:text-base-content/50"
               disabled={totalStock === 0}

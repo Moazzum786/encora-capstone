@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { fetchProductById } from "../../query/getProductById";
+import { fetchProductById } from "../../query/getProductByIdQuery";
 import { updateProduct } from "../../query/updateProductQuery";
-import { fetchCategoryList } from "../../query/getCategoryListQuery"; // Import this
+import { fetchCategoryList } from "../../query/getCategoryListQuery";
 
 const SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
 
@@ -91,7 +91,7 @@ const ProductUpdatePage = () => {
       toast.success("Product updated successfully!");
       queryClient.invalidateQueries(["product", id]);
       queryClient.invalidateQueries(["products"]);
-      navigate("/admin/update-product"); // Or navigate(-1) to go back
+      navigate("/admin/update-product");
     },
     onError: (err) => {
       console.error(err);
@@ -165,11 +165,9 @@ const ProductUpdatePage = () => {
                       type="button"
                       className="btn btn-circle btn-xs btn-error absolute top-2 right-2"
                       onClick={() => {
-                        // Don't clear if it's the original image unless you logic supports deleting images
-                        // For now, just revert to original logic or clear preview if it's a new file
                         if (imageFile) {
                           setImageFile(null);
-                          setImagePreview(product?.url || ""); // Revert to server image
+                          setImagePreview(product?.url || "");
                         }
                       }}
                     >

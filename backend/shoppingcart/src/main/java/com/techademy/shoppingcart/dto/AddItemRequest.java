@@ -1,5 +1,7 @@
 package com.techademy.shoppingcart.dto;
 
+import com.techademy.shoppingcart.enums.Size;
+
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -12,7 +14,11 @@ public class AddItemRequest {
     @Min(1)
     private Integer quantity;
 
-    public AddItemRequest() {}
+    @NotNull
+    private Size size;
+
+    public AddItemRequest() {
+    }
 
     public AddItemRequest(String productId, Integer quantity) {
         this.productId = productId;
@@ -20,16 +26,26 @@ public class AddItemRequest {
     }
 
     public String getProductId() {
-    	return productId;
-    	}
+        return productId;
+    }
+
     public void setProductId(String productId) {
-    	this.productId = productId;
-    	}
+        this.productId = productId;
+    }
 
     public Integer getQuantity() {
-    	return quantity;
-    	}
+        return quantity;
+    }
+
     public void setQuantity(Integer quantity) {
-    	this.quantity = quantity;
-    	}
+        this.quantity = quantity;
+    }
+
+    public Size getSize() {
+        return size;
+    }
+
+    public void setSize(Size size) {
+        this.size = size;
+    }
 }

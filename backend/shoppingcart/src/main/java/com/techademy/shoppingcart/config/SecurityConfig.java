@@ -1,6 +1,5 @@
-package com.example.product_service.config;
+package com.techademy.shoppingcart.config;
 
-import com.example.product_service.filter.GatewayHeaderFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -11,6 +10,8 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.techademy.shoppingcart.filter.GatewayHeaderFilter;
 
 @Configuration
 @EnableWebSecurity

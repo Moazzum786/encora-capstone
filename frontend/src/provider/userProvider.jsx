@@ -1,6 +1,6 @@
 import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
-import React, { use, useState, createContext } from "react";
+import { use, useState, createContext } from "react";
 
 /**
  * @typedef {Object} User
@@ -48,7 +48,7 @@ function UserProvider({ children }) {
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem("accessToken");
+    Cookies.remove("accessToken");
   };
 
   const value = {
